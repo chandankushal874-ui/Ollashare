@@ -221,7 +221,11 @@ export function SharedBrowserPanel({
 	}, [onViewerStateChange, viewerState]);
 	useEffect(() => {
 		if (!onFrameHandleChange) return;
-		if (viewerState !== "connected" || !session?.id || !viewerFrameRef.current) {
+		if (
+			viewerState !== "connected" ||
+			!session?.id ||
+			!viewerFrameRef.current
+		) {
 			onFrameHandleChange(null);
 			return;
 		}
@@ -230,10 +234,10 @@ export function SharedBrowserPanel({
 			onFrameHandleChange(
 				iframe
 					? createSharedBrowserFrameHandle({
-						iframe,
-						sessionId: session.id,
-						connectionState: viewerState,
-					})
+							iframe,
+							sessionId: session.id,
+							connectionState: viewerState,
+						})
 					: null,
 			);
 		};
@@ -587,22 +591,30 @@ export function SharedBrowserPanel({
 						ref={setToolbarContainer}
 						className="min-w-0 flex-1 basis-full overflow-hidden sm:basis-auto"
 					/>
-					<button
-						type="button"
-						onClick={toggleFullscreen}
-						className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg bg-[#f0f1f5] px-3 py-2 text-xs font-semibold text-[#4e535f] transition hover:bg-[#e5e7ed] sm:min-h-0 sm:py-1.5"
-					>
-						{isFullscreen ? (
-							<Minimize2 className="h-3.5 w-3.5" />
-						) : (
-							<Maximize2 className="h-3.5 w-3.5" />
-						)}
-						{isFullscreen ? "Exit full screen" : "Full screen"}
-					</button>
 				</div>
 			</header>
 
 			<div className="relative min-h-0 flex-1 bg-[#070b12]">
+				{grant && viewerState === "connected" && (
+					<button
+						type="button"
+						onClick={() => void toggleFullscreen()}
+						data-shared-browser-fullscreen-control
+						className="absolute right-3 top-3 z-30 inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/20 bg-slate-950/90 px-3.5 py-2 text-xs font-bold text-white shadow-2xl backdrop-blur-xl transition hover:border-sky-400/60 hover:bg-sky-500 active:scale-95"
+						title={
+							isFullscreen
+								? "Exit provisioned browser fullscreen"
+								: "Open provisioned browser fullscreen"
+						}
+					>
+						{isFullscreen ? (
+							<Minimize2 className="h-4 w-4" />
+						) : (
+							<Maximize2 className="h-4 w-4" />
+						)}
+						{isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+					</button>
+				)}
 				{grant ? (
 					<>
 						<iframe
@@ -708,46 +720,46 @@ export function SharedBrowserPanel({
 							{participants.some(
 								(participant) => participant.id !== participantId,
 							) && (
-									<section
-										aria-labelledby="shared-browser-drawing-permissions"
-										className="rounded-lg border border-amber-200 bg-amber-50/70 p-2"
+								<section
+									aria-labelledby="shared-browser-drawing-permissions"
+									className="rounded-lg border border-amber-200 bg-amber-50/70 p-2"
+								>
+									<p
+										id="shared-browser-drawing-permissions"
+										className="text-[11px] font-semibold text-amber-800"
 									>
-										<p
-											id="shared-browser-drawing-permissions"
-											className="text-[11px] font-semibold text-amber-800"
-										>
-											Drawing permissions
-										</p>
-										<div className="mt-1.5 flex max-w-full flex-wrap items-center gap-2">
-											{participants
-												.filter((participant) => participant.id !== participantId)
-												.map((participant) => {
-													const allowed =
-														annotationPermissions.allowedUserIds.has(
-															participant.id,
-														);
-													return (
-														<button
-															key={`draw-${participant.id}`}
-															type="button"
-															aria-pressed={allowed}
-															onClick={() =>
-																void onSetAnnotationPermission?.(
-																	participant.id,
-																	!allowed,
-																)
-															}
-															className={`min-h-11 rounded-lg border px-3 py-2 text-xs font-semibold ${allowed ? "border-amber-300 bg-white text-amber-700" : "border-[#dedee5] bg-white text-[#4e535f]"}`}
-														>
-															{allowed
-																? `Revoke ${participant.name}`
-																: `Allow ${participant.name}`}
-														</button>
+										Drawing permissions
+									</p>
+									<div className="mt-1.5 flex max-w-full flex-wrap items-center gap-2">
+										{participants
+											.filter((participant) => participant.id !== participantId)
+											.map((participant) => {
+												const allowed =
+													annotationPermissions.allowedUserIds.has(
+														participant.id,
 													);
-												})}
-										</div>
-									</section>
-								)}
+												return (
+													<button
+														key={`draw-${participant.id}`}
+														type="button"
+														aria-pressed={allowed}
+														onClick={() =>
+															void onSetAnnotationPermission?.(
+																participant.id,
+																!allowed,
+															)
+														}
+														className={`min-h-11 rounded-lg border px-3 py-2 text-xs font-semibold ${allowed ? "border-amber-300 bg-white text-amber-700" : "border-[#dedee5] bg-white text-[#4e535f]"}`}
+													>
+														{allowed
+															? `Revoke ${participant.name}`
+															: `Allow ${participant.name}`}
+													</button>
+												);
+											})}
+									</div>
+								</section>
+							)}
 							<div className="flex min-w-0 max-w-full flex-1 flex-wrap items-center gap-2 overflow-y-auto overscroll-contain [scrollbar-width:none] [&>*]:min-h-11 [&>*]:shrink-0 [&::-webkit-scrollbar]:hidden sm:flex-nowrap sm:justify-end sm:overflow-x-auto sm:touch-pan-x [&_select]:max-w-full">
 								{false && participants.length > 0 && (
 									<>
