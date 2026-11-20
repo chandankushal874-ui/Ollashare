@@ -1,0 +1,67 @@
+{
+  "name": "v1",
+  "private": true,
+  "patchedDependencies": {
+    "@convex-dev/auth@0.0.96": "patches/convex-auth-inmemory.patch",
+    "@erquhart/convex-polar@0.2.0-alpha.5": "patches/convex-polar-account-deletion.patch"
+  },
+  "overrides": {
+    "@remix-run/node": "2.17.5",
+    "@remix-run/server-runtime": "2.17.5",
+    "form-data": "4.0.6",
+    "engine.io": "6.6.11",
+    "socket.io-parser": "4.2.7",
+    "brace-expansion": "2.1.7",
+    "browserslist": "4.29.5",
+    "fast-uri": "3.1.9",
+    "glob": "10.5.0",
+    "js-cookie": "3.0.8",
+    "minimatch": "9.0.9"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "tooling/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "clean": "git clean -xdf node_modules",
+    "clean:workspaces": "turbo clean",
+    "dev": "turbo dev --parallel",
+    "dev:web": "turbo dev --filter=@v1/web",
+    "dev:jobs": "turbo jobs --filter=@v1/jobs",
+    "dev:app": "turbo dev --filter=@v1/app",
+    "dev:desktop": "bun --filter @v1/desktop dev",
+    "start:web": "turbo start --filter=@v1/web",
+    "start:app": "turbo start --filter=@v1/app",
+    "start:desktop": "bun --filter @v1/desktop start",
+    "test:desktop": "bun --filter @v1/desktop test",
+    "test": "vitest run --root packages/backend && vitest run --root apps/app --fileParallelism=false",
+    "test:backend": "vitest run --root packages/backend",
+    "test:app": "vitest run --root apps/app --fileParallelism=false",
+    "test:watch": "vitest --root packages/backend",
+    "format": "biome format --write .",
+    "lint": "turbo lint && bun lint:repo",
+    "lint:repo": "sherif",
+    "lint:repo:fix": "sherif --fix",
+    "typecheck": "turbo typecheck"
+  },
+  "devDependencies": {
+    "@auth/core": "0.41.3",
+    "@biomejs/biome": "1.8.3",
+    "@t3-oss/env-nextjs": "^0.11.1",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.4.5",
+    "ora": "^5.4.1",
+    "sherif": "1.13.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.1",
+    "turbo": "2.9.14",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "bun@1.4.2",
+  "version": "0.0.1",
+  "dependencies": {
+    "jose": "^6.2.12"
+  }
+}

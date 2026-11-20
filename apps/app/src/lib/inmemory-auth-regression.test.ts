@@ -1,0 +1,23 @@
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+import { expect, test } from 'vitest';
+const require = createRequire(import.meta.url);
+const authModule = require.resolve('@convex-dev/auth/react');
+const source = readFileSync(path.join(path.dirname(authModule), 'client.js'), 'utf8');
+const start = source.indexOf('function useInMemoryStorage()');
+const end = source.indexOf('// In the browser, executes', start);
+if (start < 0 || end < 0) throw new Error('Installed SDK memory-storage implementation changed; review patch');
+test('retained SDK storage callbacks read current writes and removals without persistence', () => {
+  const holder = { current: Object.create(null) as Record<string, string> };
+  const hook = new Function('useRef', `${source.slice(start, end)}; return useInMemoryStorage;`)(() => holder);
+  const storage = hook()();
+  const retainedRead = storage.getItem;
+  storage.setItem('test-refresh-token', 'fabricated-value');
+  expect(retainedRead('test-refresh-token')).toBe('fabricated-value');
+  storage.setItem('test-refresh-token', 'replacement');
+  expect(retainedRead('test-refresh-token')).toBe('replacement');
+  storage.removeItem('test-refresh-token');
+  expect(retainedRead('test-refresh-token')).toBeUndefined();
+  expect(Object.getPrototypeOf(holder.current)).toBeNull();
+});

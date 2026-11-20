@@ -1,0 +1,47 @@
+diff --git a/dist/react/client.js b/dist/react/client.js
+--- a/dist/react/client.js
++++ b/dist/react/client.js
+@@ -296,14 +296,11 @@ function useInMemoryStorage() {
+-    const [inMemoryStorage, setInMemoryStorage] = useState({});
++    const inMemoryStorage = useRef(Object.create(null));
+     return () => ({
+-        getItem: (key) => inMemoryStorage[key],
++        getItem: (key) => inMemoryStorage.current[key],
+         setItem: (key, value) => {
+-            setInMemoryStorage((prev) => ({ ...prev, [key]: value }));
++            inMemoryStorage.current[key] = value;
+         },
+         removeItem: (key) => {
+-            setInMemoryStorage((prev) => {
+-                const { [key]: _, ...rest } = prev;
+-                return rest;
+-            });
++            delete inMemoryStorage.current[key];
+         },
+     });
+ }
+diff --git a/src/react/client.tsx b/src/react/client.tsx
+--- a/src/react/client.tsx
++++ b/src/react/client.tsx
+@@ -450,17 +450,12 @@ function useInMemoryStorage() {
+-  const [inMemoryStorage, setInMemoryStorage] = useState<
+-    Record<string, string>
+-  >({});
++  const inMemoryStorage = useRef<Record<string, string>>(Object.create(null));
+   return () =>
+     ({
+-      getItem: (key) => inMemoryStorage[key],
++      getItem: (key) => inMemoryStorage.current[key],
+       setItem: (key, value) => {
+-        setInMemoryStorage((prev) => ({ ...prev, [key]: value }));
++        inMemoryStorage.current[key] = value;
+       },
+       removeItem: (key) => {
+-        setInMemoryStorage((prev) => {
+-          const { [key]: _, ...rest } = prev;
+-          return rest;
+-        });
++        delete inMemoryStorage.current[key];
+       },
+     }) satisfies TokenStorage;
+ }

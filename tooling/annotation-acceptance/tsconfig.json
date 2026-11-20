@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "jsx": "react-jsx",
+        "strict": true,
+        "noEmit": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "paths": {
+            "@/*": [
+                "../../apps/app/src/*"
+            ]
+        }
+    },
+    "include": [
+        "../../apps/app/src/lib/annotation-types.ts",
+        "../../apps/app/src/lib/annotation-messages.ts",
+        "../../apps/app/src/lib/screen-annotation-ui.ts",
+        "../../apps/app/src/components/shared-browser/annotation-overlay.tsx",
+        "./harness.tsx"
+    ]
+}

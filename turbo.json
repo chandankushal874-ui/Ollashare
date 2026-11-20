@@ -1,0 +1,59 @@
+{
+	"$schema": "https://turborepo.org/schema.json",
+	"ui": "stream",
+	"tasks": {
+		"topo": {
+			"dependsOn": ["^topo"]
+		},
+		"build": {
+			"env": [
+				"NEXT_PUBLIC_APP_URL",
+				"NEXT_PUBLIC_CAL_LINK",
+				"NEXT_PUBLIC_CONVEX_URL",
+				"NEXT_PUBLIC_LIVEKIT_URL",
+				"NEXT_PUBLIC_LOCAL_RECORDING_360P_ENABLED",
+				"NEXT_PUBLIC_LOCAL_RECORDING_ENABLED",
+				"NEXT_PUBLIC_OPENPANEL_CLIENT_ID",
+				"NEXT_PUBLIC_SENTRY_DSN",
+				"NEXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE",
+				"NEXT_PUBLIC_SHARED_BROWSER_RECORDING_ENABLED",
+				"NEXT_PUBLIC_STUN_URLS",
+				"NEXT_PUBLIC_TRANSPORT",
+				"NEXT_PUBLIC_TURN_CREDENTIAL",
+				"NEXT_PUBLIC_TURN_PASSWORD",
+				"NEXT_PUBLIC_TURN_URL",
+				"NEXT_PUBLIC_TURN_URLS",
+				"NEXT_PUBLIC_TURN_USERNAME",
+				"PUBLIC_ORIGIN",
+				"VERCEL_URL"
+			],
+			"inputs": ["$TURBO_DEFAULT$", ".env"],
+			"dependsOn": ["^build"],
+			"outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".expo/**"]
+		},
+		"@v1/app#build": {
+			"env": ["SENTRY_ORG", "SENTRY_PROJECT"]
+		},
+		"start": {
+			"cache": false
+		},
+		"test": {
+			"cache": false
+		},
+		"clean": {
+			"cache": false
+		},
+		"dev": {
+			"inputs": ["$TURBO_DEFAULT$", ".env"],
+			"persistent": true,
+			"cache": false
+		},
+		"lint": {
+			"dependsOn": ["^topo"]
+		},
+		"typecheck": {
+			"dependsOn": ["^topo"],
+			"outputs": ["node_modules/.cache/tsbuildinfo.json"]
+		}
+	}
+}

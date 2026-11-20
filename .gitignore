@@ -1,0 +1,86 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output and caches
+.next/
+**/.next/
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+.turbo/
+**/.turbo/
+.cache/
+**/.cache/
+.react-email/
+**/.react-email/
+*.tsbuildinfo
+
+# Tests and generated artifacts
+coverage/
+**/coverage/
+playwright-report/
+test-results/
+artifacts/
+**/artifacts/
+reports/
+evidence/
+screenshots/
+traces/
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+credentials/
+secrets/
+
+# Runtime/local state
+*.log
+*.pid
+*.pid.lock
+*.sock
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+data/
+uploads/
+storage/
+tmp/
+temp/
+
+# VM, deployment and infrastructure details
+services/
+deploy/
+docker-compose*.yml
+docker-compose*.yaml
+*-DEPLOYMENT-*.txt
+DEPLOYMENT-STATUS-*.txt
+
+# Archives and backups
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+*.gz
+*.bak
+*.backup
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

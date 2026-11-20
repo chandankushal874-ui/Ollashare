@@ -1,0 +1,3 @@
+import { assertMutationOrigin, json, requireToken, revoke } from "@/lib/shared-browser-server";
+export const runtime = "nodejs"; export const dynamic = "force-dynamic";
+export async function DELETE(request: Request, { params }: { params: Promise<{ sessionId: string; grantId: string }> }) { if (!assertMutationOrigin(request)) return json({ code: "ORIGIN", message: "Same-origin request required" }, 403); try { const { sessionId, grantId } = await params; await revoke(sessionId, grantId, await requireToken()); return new Response(null, { status: 204 }); } catch { return json({ code: "REVOKE_FAILED", message: "Unable to revoke control" }, 403); } }

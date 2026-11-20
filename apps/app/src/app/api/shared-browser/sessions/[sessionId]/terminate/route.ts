@@ -1,0 +1,3 @@
+import { assertMutationOrigin, json, requireToken, terminate } from "@/lib/shared-browser-server";
+export const runtime = "nodejs"; export const dynamic = "force-dynamic";
+export async function POST(request: Request, { params }: { params: Promise<{ sessionId: string }> }) { if (!assertMutationOrigin(request)) return json({ code: "ORIGIN", message: "Same-origin request required" }, 403); try { const { sessionId } = await params; await terminate(sessionId, await requireToken()); return new Response(null, { status: 204 }); } catch { return json({ code: "TERMINATE_FAILED", message: "Unable to terminate Shared Browser" }, 403); } }

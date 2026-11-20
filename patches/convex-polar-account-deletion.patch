@@ -1,0 +1,32 @@
+diff --git a/src/component/lib.ts b/src/component/lib.ts
+index 9af3c11..cb4d902 100644
+--- a/src/component/lib.ts
++++ b/src/component/lib.ts
+@@ -18,6 +18,27 @@ export const getCustomerByUserId = query({
+   },
+ });
+
++export const deleteCustomerByUserId = mutation({
++  args: {
++    userId: v.string(),
++  },
++  returns: v.boolean(),
++  handler: async (ctx, args) => {
++    const customer = await ctx.db
++      .query("customers")
++      .withIndex("userId", (q) => q.eq("userId", args.userId))
++      .unique();
++    if (!customer) return false;
++    const subscriptions = await ctx.db
++      .query("subscriptions")
++      .withIndex("customerId", (q) => q.eq("customerId", customer.id))
++      .collect();
++    for (const subscription of subscriptions) await ctx.db.delete(subscription._id);
++    await ctx.db.delete(customer._id);
++    return true;
++  },
++});
++
+ export const insertCustomer = mutation({
+   args: {
+     id: v.string(),

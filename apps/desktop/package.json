@@ -1,0 +1,16 @@
+{
+    "name": "@v1/desktop",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "src/main.mjs",
+    "scripts": {
+        "dev": "electron .",
+        "start": "electron .",
+        "typecheck": "node --check src/main.mjs && node --check src/preload.mjs",
+        "test": "node --test src/*.test.mjs"
+    },
+    "devDependencies": {
+        "electron": "45.4.1"
+    }
+}
